@@ -62,13 +62,8 @@ public class UserServiceImpl implements UserService {
         if (userOptional.isEmpty()) {
             throw new EntityNotFoundException("User not found with id: " + id);
         }
-        User existingUser = userOptional.get();
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setAge(user.getAge());
-        existingUser.setRoles(user.getRoles());
-        existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     

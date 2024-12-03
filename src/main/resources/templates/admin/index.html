@@ -85,14 +85,28 @@
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
-                                                    th:attr="data-bs-target='#editUser-' + ${user.getId()}">
+                                                    th:attr="
+                                                    data-bs-target='#editUserModal-' + ${user.id},
+                                                    data-id=${user.id},
+                                                    data-firstName=${user.firstName},
+                                                    data-lastName=${user.lastName},
+                                                    data-age=${user.age},
+                                                    data-email=${user.email},
+                                                    data-roles=${user.roles}">
                                                 Edit
                                             </button>
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-danger text-white"
                                                     data-bs-toggle="modal"
-                                                    th:attr="data-bs-target='#deleteUser-' + ${user.getId()}">
+                                                    th:attr="
+                                                    data-bs-target='#deleteUserModal-' + ${user.getId()},
+                                                    data-deleteId=${user.id},
+                                                    data-firstName=${user.firstName},
+                                                    data-lastName=${user.lastName},
+                                                    data-age=${user.age},
+                                                    data-email=${user.email},
+                                                    data-roles=${user.roles}">
                                                 Delete
                                             </button>
                                         </td>
@@ -109,7 +123,7 @@
 </div>
 
 <!-- modal edit user -->
-<div class="modal" th:each="user : ${users}" th:id="'editUser-' + ${user.getId()}"
+<div class="modal" th:each="user : ${users}" th:id="'editUserModal-' + ${user.getId()}"
      th:classappend="${editError == user.id} ? 'show d-block' : ''"
      tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -123,17 +137,16 @@
                 <form th:id="'editUserForm-' + ${user.getId()}" th:method="POST"
                       th:action="@{/admin/edit/{id}(id=${user.getId()})}" th:object="${user}">
                     <div class="mb-3">
-                        <label class="form-label fw-bold" for="id">ID</label>
-                        <input class="form-control w-50 mx-auto bg-light" type="text" id="id"
+                        <label class="form-label fw-bold" for="editId">ID</label>
+                        <input class="form-control w-50 mx-auto bg-light" type="text" id="editId"
                                th:field="*{id}"
                                disabled>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold" for="firstName">First name</label>
-                        <input class="form-control w-50 mx-auto" type="text" id="firstName"
-                               th:field="*{firstName}"
-                               placeholder="First name">
+                        <label class="form-label fw-bold" for="editFirstName">First name</label>
+                        <input class="form-control w-50 mx-auto" type="text" id="editFirstName"
+                               th:field="*{firstName}">
 
                         <div class="alert alert-danger mt-2 w-75 mx-auto"
                              th:if="${#fields.hasErrors('firstName')}"
@@ -141,48 +154,44 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold" for="lastName">Last name</label>
-                        <input class="form-control w-50 mx-auto" type="text" id="lastName"
-                               th:field="*{lastName}"
-                               placeholder="Last name">
+                        <label class="form-label fw-bold" for="editLastName">Last name</label>
+                        <input class="form-control w-50 mx-auto" type="text" id="editLastName"
+                               th:field="*{lastName}">
                         <div class="alert alert-danger mt-2 w-75 mx-auto"
                              th:if="${#fields.hasErrors('lastName')}"
                              th:errors="*{lastName}">lastName error
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold" for="age">Age</label>
-                        <input class="form-control w-50 mx-auto" type="number" id="age"
-                               th:field="*{age}"
-                               placeholder="Age">
+                        <label class="form-label fw-bold" for="editAge">Age</label>
+                        <input class="form-control w-50 mx-auto" type="number" id="editAge"
+                               th:field="*{age}">
                         <div class="alert alert-danger mt-2 w-50 mx-auto"
                              th:if="${#fields.hasErrors('age')}"
                              th:errors="*{age}">age error
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold" for="email">Email</label>
-                        <input class="form-control w-50 mx-auto" type="email" id="email"
-                               th:field="*{email}"
-                               placeholder="Email">
+                        <label class="form-label fw-bold" for="editEmail">Email</label>
+                        <input class="form-control w-50 mx-auto" type="email" id="editEmail"
+                               th:field="*{email}">
                         <div class="alert alert-danger mt-2 w-50 mx-auto"
                              th:if="${#fields.hasErrors('email')}"
                              th:errors="*{email}">email error
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold" for="password">Password</label>
-                        <input class="form-control w-50 mx-auto" type="password" id="password"
-                               th:field="*{password}"
-                               placeholder="Password">
+                        <label class="form-label fw-bold" for="editPassword">Password</label>
+                        <input class="form-control w-50 mx-auto" type="password" id="editPassword"
+                               th:field="*{password}">
                         <div class="alert alert-danger mt-2 w-75 mx-auto"
                              th:if="${#fields.hasErrors('password')}"
                              th:errors="*{password}">password error
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="roles" class="form-label fw-bold">Role</label>
-                        <select class="form-select w-50 mx-auto" id="roles" name="roles" multiple>
+                        <label for="editRoles" class="form-label fw-bold">Role</label>
+                        <select class="form-select w-50 mx-auto" id="editRoles" name="roles" multiple>
                             <option th:each="role : ${roles}"
                                     th:value="${role.id}"
                                     th:field="*{roles}"
@@ -205,7 +214,7 @@
 </div>
 
 <!-- modal delete user -->
-<div class="modal" th:each="user : ${users}" th:id="'deleteUser-' + ${user.getId()}"
+<div class="modal" th:each="user : ${users}" th:id="'deleteUserModal-' + ${user.getId()}"
      tabindex="-1" aria-labelledby="deleteUserLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -268,6 +277,72 @@
     </div>
 </div>
 
+<script>
+    const editButtons = document.querySelectorAll('.btn[data-id]');
+    editButtons.forEach(button => {
+        const userId = button.getAttribute('data-id');
+        const editUserModal = document.getElementById(`editUserModal-${userId}`);
+
+        editUserModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const userId = button.getAttribute('data-id');
+            const firstName = button.getAttribute('data-firstName');
+            const lastName = button.getAttribute('data-lastName');
+            const age = button.getAttribute('data-age');
+            const email = button.getAttribute('data-email');
+            const roles = button.getAttribute('data-roles').split(',');
+
+            const modalInputId = editUserModal.querySelector('#editId');
+            const modalInputFirstName = editUserModal.querySelector('#editFirstName');
+            const modalInputLastName = editUserModal.querySelector('#editLastName');
+            const modalInputAge = editUserModal.querySelector('#editAge');
+            const modalInputEmail = editUserModal.querySelector('#editEmail');
+            const modalSelectRoles = editUserModal.querySelector('#editRoles');
+
+            modalInputId.value = userId;
+            modalInputFirstName.value = firstName;
+            modalInputLastName.value = lastName;
+            modalInputAge.value = age;
+            modalInputEmail.value = email;
+
+            Array.from(modalSelectRoles.options).forEach(option => {
+                option.selected = roles.includes(option.value);
+            });
+        });
+    });
+
+</script>
+
+<script>
+    const deleteButtons = document.querySelectorAll('.btn[data-deleteId]');
+    deleteButtons.forEach(button => {
+        const userId = button.getAttribute('data-deleteId');
+        const deleteUserModal = document.getElementById(`deleteUserModal-${userId}`);
+
+        deleteUserModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const userId = button.getAttribute('data-deleteId');
+            const firstName = button.getAttribute('data-firstName');
+            const lastName = button.getAttribute('data-lastName');
+            const age = button.getAttribute('data-age');
+            const email = button.getAttribute('data-email');
+
+            const modalInputId = deleteUserModal.querySelector('#deleteUserId');
+            const modalInputFirstName = deleteUserModal.querySelector('#deleteUserFirstName');
+            const modalInputLastName = deleteUserModal.querySelector('#deleteUserLastName');
+            const modalInputAge = deleteUserModal.querySelector('#deleteUserAge');
+            const modalInputEmail = deleteUserModal.querySelector('#deleteUserEmail');
+
+            modalInputId.value = userId;
+            modalInputFirstName.value = firstName;
+            modalInputLastName.value = lastName;
+            modalInputAge.value = age;
+            modalInputEmail.value = email;
+
+        });
+    });
+
+</script>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
