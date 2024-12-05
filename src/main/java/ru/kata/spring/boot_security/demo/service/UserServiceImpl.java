@@ -28,15 +28,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User getUserByUsername(String username) {
-        return userRepository.findByEmail(username);
+        Optional<User> optionalUser = userRepository.findByEmail(username);
+        if (optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        return optionalUser.get();
     }
     
     @Override
     @Transactional
     public void save(User user) {
-        User userFromDB = userRepository.findByEmail(user.getEmail());
+        Optional<User> userFromDB = userRepository.findByEmail(user.getEmail());
         
-        if (userFromDB != null) {
+        if (userFromDB.isPresent()) {
             throw new EntityExistsException(String.format("User with this '%s' already exist", user.getEmail()));
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -71,16 +75,5 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<User> getUsers() {
         return userRepository.findAll();
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public User getUserById(long id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        
-        if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException("User not found with id: " + id);
-        }
-        return userOptional.get();
     }
 }

@@ -62,6 +62,5 @@ public class DataInitialization {
             userService.save(user);
         }
         
-        
     }
 }

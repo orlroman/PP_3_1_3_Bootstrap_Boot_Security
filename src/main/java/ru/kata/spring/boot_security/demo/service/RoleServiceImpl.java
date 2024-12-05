@@ -8,6 +8,7 @@ import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -28,11 +29,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(readOnly = true)
     public Role getRoleByTitle(String title) {
-        Role role =  roleRepository.findByTitle(title);
-        if (role == null) {
+        Optional<Role> optionalRole =  roleRepository.findByTitle(title);
+        if (optionalRole.isEmpty()) {
             throw new EntityNotFoundException(String.format("Role '%s' not found", title));
         }
-        return role;
+        return optionalRole.get();
     }
     
     @Override

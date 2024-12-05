@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -29,9 +30,13 @@ public class UserValidator implements Validator {
             errors.rejectValue("roles", "", "Need choose role");
         }
         
-        User existiongUser = userService.getUserByUsername(user.getEmail());
-        if (existiongUser != null && !existiongUser.getId().equals(user.getId())) {
-            errors.rejectValue("email", "", "User with this email already exist");
+        try {
+            User existiongUser = userService.getUserByUsername(user.getEmail());
+            if (!existiongUser.getId().equals(user.getId())) {
+                errors.rejectValue("email", "", "User with this email already exist");
+            }
+        } catch (UsernameNotFoundException ignored) {
+
         }
         
     }
